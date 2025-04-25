@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text to Speech Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #262626;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background: #333333;
+      color: #f1c40f;
+      resize: vertical;
+    }
+    button {
+      background: linear-gradient(45deg, #e74c3c, #ff5733);
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      outline: none;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #c0392b, #d43f00);
+      transform: scale(1.05);
+      background: #c0392b;
+    }
+    .result {
+      margin-top: 20px;
+      color: #f1c40f;
+      font-size: 1.2rem;
+    }
+      select {
+      background: #3498db;
+      color: #ffffff;
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 8px;
+      border: 2px solid #ffffff;
+      box-shadow: 0px 4px 6px rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      outline: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+      background: #3498db;
+      color: #ffffff;
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    select:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Text to Speech Converter</h1>
+    <textarea id="text-input" rows="5" placeholder="Enter text to convert to speech"></textarea>
+    <label for="voice-select">Select Voice:</label>
+    <select id="voice-select">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+    <button onclick="startSpeaking()">Start</button>
+    <button onclick="stopSpeaking()">Stop</button>
+  </div>
+
+  <script>
+    let utterance;
+
+    function startSpeaking() {
+      const text = document.getElementById('text-input').value;
+      if (!text) {
+        alert('Please enter some text.');
+        return;
+      }
+      utterance = new SpeechSynthesisUtterance(text);
+      const selectedVoice = document.getElementById('voice-select').value;
+      const voices = speechSynthesis.getVoices();
+      utterance.voice = voices.find(voice => selectedVoice === 'male' ? voice.name.includes('Male') : voice.name.includes('Female')) || voices[0];
+      speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeaking() {
+      speechSynthesis.cancel();
+    }
+  </script>
+</body>
+</html>

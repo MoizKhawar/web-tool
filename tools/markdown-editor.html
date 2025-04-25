@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Editor</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      background: #262626;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 600px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background: #333333;
+      color: #f1c40f;
+      resize: vertical;
+    }
+    .preview {
+      background: #333;
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #f1c40f;
+      color: #fff;
+      text-align: left;
+      min-height: 100px;
+      overflow-y: auto;
+    }
+    .toolbar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .toolbar button {
+      background: #f1c40f;
+      color: #1a1a1a;
+      border: none;
+      padding: 8px 12px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .toolbar button:hover {
+      background: #e4b600;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js">    function copyMarkdown() {
+      const textarea = document.getElementById('markdown-input');
+      textarea.select();
+      document.execCommand('copy');
+      alert('Markdown copied to clipboard!');
+    }
+
+    function downloadMarkdown() {
+      const text = document.getElementById('markdown-input').value;
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'markdown.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Markdown Editor</h1>
+    <div class="toolbar">
+      <button onclick="addMarkdown('# ')">H1</button>
+      <button onclick="addMarkdown('## ')">H2</button>
+      <button onclick="addMarkdown('### ')">H3</button>
+      <button onclick="addMarkdown('**', '**')">Bold</button>
+      <button onclick="addMarkdown('*', '*')">Italic</button>
+      <button onclick="addMarkdown('`', '`')">Code</button>
+      <button onclick="addMarkdown('- ')">List</button>
+      <button onclick="addMarkdown('> ')">Quote</button>
+      <button onclick="addMarkdown('[', '](url)')">Link</button>
+      <button onclick="addMarkdown('![', '](image-url)')">Image</button>
+      <button onclick="addMarkdown('---\n')">HR</button>
+      <button onclick="clearEditor()">Clear</button>
+      <button onclick="copyMarkdown()">Copy</button>
+      <button onclick="downloadMarkdown()">Download</button>
+    </div>
+    <textarea id="markdown-input" placeholder="Enter Markdown text..."></textarea>
+    <div class="preview" id="markdown-preview">    <div class="toolbar">
+      <button onclick="copyMarkdown()">Copy</button>
+      <button onclick="downloadMarkdown()">Download</button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('markdown-input').addEventListener('input', function() {
+      updatePreview();
+    });
+    
+    function addMarkdown(startTag, endTag = '') {
+      const textarea = document.getElementById('markdown-input');
+      const startPos = textarea.selectionStart;
+      const endPos = textarea.selectionEnd;
+      const text = textarea.value;
+      const selectedText = text.substring(startPos, endPos);
+      
+      const newText = text.substring(0, startPos) + startTag + selectedText + endTag + text.substring(endPos);
+      textarea.value = newText;
+      textarea.focus();
+      textarea.setSelectionRange(startPos + startTag.length, endPos + startTag.length);
+      updatePreview();
+    }
+    
+    function updatePreview() {
+      const inputText = document.getElementById('markdown-input').value;
+      document.getElementById('markdown-preview').innerHTML = marked.parse(inputText);
+    }
+    
+    function clearEditor() {
+      document.getElementById('markdown-input').value = '';
+      updatePreview();
+    }
+  </script>
+</body>
+</html>

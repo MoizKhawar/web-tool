@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            width: 300px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff3b3b;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #00aaff;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff3b3b;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #e60000;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" placeholder="Enter your weight">
+        <label for="heightFeet">Height (feet):</label>
+        <input type="number" id="heightFeet" placeholder="Enter height in feet">
+        <label for="heightInches">Height (inches):</label>
+        <input type="number" id="heightInches" placeholder="Enter height in inches">
+        <button onclick="calculateBMI()">Calculate BMI</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const heightFeet = parseFloat(document.getElementById('heightFeet').value);
+            const heightInches = parseFloat(document.getElementById('heightInches').value);
+            const result = document.getElementById('result');
+
+            if (isNaN(weight) || isNaN(heightFeet) || isNaN(heightInches) || weight <= 0 || heightFeet < 0 || heightInches < 0) {
+                result.textContent = "Please enter valid values.";
+                result.style.color = "#ff3b3b";
+                return;
+            }
+
+            // Convert height to meters
+            const totalHeightInInches = (heightFeet * 12) + heightInches;
+            const heightInMeters = totalHeightInInches * 0.0254;
+
+            const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+            result.textContent = `Your BMI is ${bmi}`;
+            result.style.color = "#00ff00";
+        }
+    </script>
+</body>
+</html>

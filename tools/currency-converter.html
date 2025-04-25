@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a; /* Black background */
+      color: #f1c40f; /* Yellow text */
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #262626; /* Dark grey container */
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #f1c40f; /* Yellow heading */
+      margin-bottom: 20px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444; /* Grey border */
+      border-radius: 8px;
+      margin-bottom: 20px;
+      outline: none;
+      background: #333333; /* Dark grey input */
+      color: #f1c40f; /* Yellow text */
+    }
+
+    input[type="number"]:focus {
+      border-color: #e74c3c; /* Red border on focus */
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444; /* Grey border */
+      border-radius: 8px;
+      margin-bottom: 20px;
+      outline: none;
+      background: #333333; /* Dark grey input */
+      color: #f1c40f; /* Yellow text */
+    }
+
+    select:focus {
+      border-color: #e74c3c; /* Red border on focus */
+    }
+
+    button {
+      background: #e74c3c; /* Red button */
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #c0392b; /* Darker red on hover */
+    }
+
+    .result {
+      margin-top: 20px;
+      color: #f1c40f; /* Yellow text */
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Currency Converter</h1>
+    <input type="number" id="amount" placeholder="Enter amount">
+    <select id="from-currency">
+      <!-- All world currencies with symbols -->
+      <option value="USD">USD ($)</option>
+      <option value="EUR">EUR (€)</option>
+      <option value="GBP">GBP (£)</option>
+      <option value="INR">INR (₹)</option>
+      <option value="JPY">JPY (¥)</option>
+      <option value="AUD">AUD (A$)</option>
+      <option value="CAD">CAD (C$)</option>
+      <option value="CNY">CNY (¥)</option>
+      <option value="NZD">NZD (NZ$)</option>
+      <option value="CHF">CHF (CHF)</option>
+      <option value="HKD">HKD (HK$)</option>
+      <option value="SGD">SGD (S$)</option>
+      <option value="KRW">KRW (₩)</option>
+      <option value="SEK">SEK (kr)</option>
+      <option value="NOK">NOK (kr)</option>
+      <option value="DKK">DKK (kr)</option>
+      <option value="RUB">RUB (₽)</option>
+      <option value="TRY">TRY (₺)</option>
+      <option value="BRL">BRL (R$)</option>
+      <option value="ZAR">ZAR (R)</option>
+      <option value="MXN">MXN (MX$)</option>
+      <option value="IDR">IDR (Rp)</option>
+      <option value="THB">THB (฿)</option>
+      <option value="MYR">MYR (RM)</option>
+      <option value="PHP">PHP (₱)</option>
+      <option value="SAR">SAR (﷼)</option>
+      <option value="AED">AED (د.إ)</option>
+      <option value="PLN">PLN (zł)</option>
+      <option value="CZK">CZK (Kč)</option>
+      <option value="HUF">HUF (Ft)</option>
+      <option value="ILS">ILS (₪)</option>
+      <option value="ARS">ARS ($)</option>
+      <option value="CLP">CLP (CLP$)</option>
+      <option value="COP">COP (COL$)</option>
+      <option value="EGP">EGP (E£)</option>
+      <option value="NGN">NGN (₦)</option>
+      <option value="PKR">PKR (₨)</option>
+      <option value="BDT">BDT (৳)</option>
+      <option value="VND">VND (₫)</option>
+      <option value="KZT">KZT (₸)</option>
+      <option value="UAH">UAH (₴)</option>
+      <option value="QAR">QAR (﷼)</option>
+      <option value="KWD">KWD (د.ك)</option>
+      <option value="OMR">OMR (﷼)</option>
+      <option value="BHD">BHD (ب.د)</option>
+      <option value="JOD">JOD (د.ا)</option>
+      <option value="LKR">LKR (₨)</option>
+      <option value="NPR">NPR (₨)</option>
+      <option value="MMK">MMK (K)</option>
+      <option value="KHR">KHR (៛)</option>
+      <option value="LAK">LAK (₭)</option>
+      <option value="MNT">MNT (₮)</option>
+      <option value="MAD">MAD (د.م.)</option>
+      <option value="TWD">TWD (NT$)</option>
+      <option value="HNL">HNL (L)</option>
+      <option value="GTQ">GTQ (Q)</option>
+      <option value="PEN">PEN (S/.)</option>
+      <option value="CRC">CRC (₡)</option>
+      <option value="DOP">DOP (RD$)</option>
+      <option value="PYG">PYG (₲)</option>
+      <option value="UYU">UYU ($U)</option>
+      <option value="BOB">BOB (Bs.)</option>
+      <option value="RSD">RSD (дин.)</option>
+      <option value="ISK">ISK (kr)</option>
+      <option value="HRK">HRK (kn)</option>
+      <option value="BGN">BGN (лв)</option>
+      <option value="ALL">ALL (L)</option>
+      <option value="GEL">GEL (₾)</option>
+      <option value="AMD">AMD (֏)</option>
+      <option value="AZN">AZN (₼)</option>
+      <option value="BYN">BYN (Br)</option>
+      <option value="UZS">UZS (so'm)</option>
+      <option value="TJS">TJS (ЅМ)</option>
+      <option value="KGS">KGS (сом)</option>
+      <option value="TMT">TMT (T)</option>
+      <option value="AFN">AFN (؋)</option>
+      <option value="IRR">IRR (﷼)</option>
+      <option value="IQD">IQD (ع.د)</option>
+      <option value="SYP">SYP (ل.س)</option>
+      <option value="YER">YER (﷼)</option>
+      <option value="LBP">LBP (ل.ل)</option>
+      <option value="JMD">JMD (J$)</option>
+      <option value="TTD">TTD (TT$)</option>
+      <option value="BBD">BBD (Bds$)</option>
+      <option value="XCD">XCD (EC$)</option>
+      <option value="BSD">BSD (B$)</option>
+      <option value="BZD">BZD (BZ$)</option>
+      <option value="GYD">GYD (G$)</option>
+      <option value="SRD">SRD (SRD$)</option>
+      <option value="ANG">ANG (ƒ)</option>
+      <option value="AWG">AWG (ƒ)</option>
+      <option value="CUP">CUP (₱)</option>
+      <option value="CUC">CUC (CUC$)</option>
+      <option value="KPW">KPW (₩)</option>
+      <option value="ERN">ERN (Nfk)</option>
+      <option value="SHP">SHP (£)</option>
+      <option value="FKP">FKP (£)</option>
+      <option value="GIP">GIP (£)</option>
+      <option value="IMP">IMP (£)</option>
+      <option value="JEP">JEP (£)</option>
+      <option value="KID">KID ($)</option>
+      <option value="LRD">LRD (L$)</option>
+      <option value="MVR">MVR (Rf)</option>
+      <option value="MUR">MUR (₨)</option>
+      <option value="NAD">NAD (N$)</option>
+      <option value="PGK">PGK (K)</option>
+      <option value="SBD">SBD (SI$)</option>
+      <option value="SLL">SLL (Le)</option>
+      <option value="SOS">SOS (Sh)</option>
+      <option value="SSP">SSP (£)</option>
+      <option value="STN">STN (Db)</option>
+      <option value="TOP">TOP (T$)</option>
+      <option value="VUV">VUV (Vt)</option>
+      <option value="WST">WST (WS$)</option>
+      <option value="ZMW">ZMW (ZK)</option>
+      <option value="ZWL">ZWL (Z$)</option>
+    </select>
+    <span>to</span>
+    <select id="to-currency">
+      <!-- All world currencies with symbols -->
+      <option value="USD">USD ($)</option>
+      <option value="EUR">EUR (€)</option>
+      <option value="GBP">GBP (£)</option>
+      <option value="INR">INR (₹)</option>
+      <option value="JPY">JPY (¥)</option>
+      <option value="AUD">AUD (A$)</option>
+      <option value="CAD">CAD (C$)</option>
+      <option value="CNY">CNY (¥)</option>
+      <option value="NZD">NZD (NZ$)</option>
+      <option value="CHF">CHF (CHF)</option>
+      <option value="HKD">HKD (HK$)</option>
+      <option value="SGD">SGD (S$)</option>
+      <option value="KRW">KRW (₩)</option>
+      <option value="SEK">SEK (kr)</option>
+      <option value="NOK">NOK (kr)</option>
+      <option value="DKK">DKK (kr)</option>
+      <option value="RUB">RUB (₽)</option>
+      <option value="TRY">TRY (₺)</option>
+      <option value="BRL">BRL (R$)</option>
+      <option value="ZAR">ZAR (R)</option>
+      <option value="MXN">MXN (MX$)</option>
+      <option value="IDR">IDR (Rp)</option>
+      <option value="THB">THB (฿)</option>
+      <option value="MYR">MYR (RM)</option>
+      <option value="PHP">PHP (₱)</option>
+      <option value="SAR">SAR (﷼)</option>
+      <option value="AED">AED (د.إ)</option>
+      <option value="PLN">PLN (zł)</option>
+      <option value="CZK">CZK (Kč)</option>
+      <option value="HUF">HUF (Ft)</option>
+      <option value="ILS">ILS (₪)</option>
+      <option value="ARS">ARS ($)</option>
+      <option value="CLP">CLP (CLP$)</option>
+      <option value="COP">COP (COL$)</option>
+      <option value="EGP">EGP (E£)</option>
+      <option value="NGN">NGN (₦)</option>
+      <option value="PKR">PKR (₨)</option>
+      <option value="BDT">BDT (৳)</option>
+      <option value="VND">VND (₫)</option>
+      <option value="KZT">KZT (₸)</option>
+      <option value="UAH">UAH (₴)</option>
+      <option value="QAR">QAR (﷼)</option>
+      <option value="KWD">KWD (د.ك)</option>
+      <option value="OMR">OMR (﷼)</option>
+      <option value="BHD">BHD (ب.د)</option>
+      <option value="JOD">JOD (د.ا)</option>
+      <option value="LKR">LKR (₨)</option>
+      <option value="NPR">NPR (₨)</option>
+      <option value="MMK">MMK (K)</option>
+      <option value="KHR">KHR (៛)</option>
+      <option value="LAK">LAK (₭)</option>
+      <option value="MNT">MNT (₮)</option>
+      <option value="MAD">MAD (د.م.)</option>
+      <option value="TWD">TWD (NT$)</option>
+      <option value="HNL">HNL (L)</option>
+      <option value="GTQ">GTQ (Q)</option>
+      <option value="PEN">PEN (S/.)</option>
+      <option value="CRC">CRC (₡)</option>
+      <option value="DOP">DOP (RD$)</option>
+      <option value="PYG">PYG (₲)</option>
+      <option value="UYU">UYU ($U)</option>
+      <option value="BOB">BOB (Bs.)</option>
+      <option value="RSD">RSD (дин.)</option>
+      <option value="ISK">ISK (kr)</option>
+      <option value="HRK">HRK (kn)</option>
+      <option value="BGN">BGN (лв)</option>
+      <option value="ALL">ALL (L)</option>
+      <option value="GEL">GEL (₾)</option>
+      <option value="AMD">AMD (֏)</option>
+      <option value="AZN">AZN (₼)</option>
+      <option value="BYN">BYN (Br)</option>
+      <option value="UZS">UZS (so'm)</option>
+      <option value="TJS">TJS (ЅМ)</option>
+      <option value="KGS">KGS (сом)</option>
+      <option value="TMT">TMT (T)</option>
+      <option value="AFN">AFN (؋)</option>
+      <option value="IRR">IRR (﷼)</option>
+      <option value="IQD">IQD (ع.د)</option>
+      <option value="SYP">SYP (ل.س)</option>
+      <option value="YER">YER (﷼)</option>
+      <option value="LBP">LBP (ل.ل)</option>
+      <option value="JMD">JMD (J$)</option>
+      <option value="TTD">TTD (TT$)</option>
+      <option value="BBD">BBD (Bds$)</option>
+      <option value="XCD">XCD (EC$)</option>
+      <option value="BSD">BSD (B$)</option>
+      <option value="BZD">BZD (BZ$)</option>
+      <option value="GYD">GYD (G$)</option>
+      <option value="SRD">SRD (SRD$)</option>
+      <option value="ANG">ANG (ƒ)</option>
+      <option value="AWG">AWG (ƒ)</option>
+      <option value="CUP">CUP (₱)</option>
+      <option value="CUC">CUC (CUC$)</option>
+      <option value="KPW">KPW (₩)</option>
+      <option value="ERN">ERN (Nfk)</option>
+      <option value="SHP">SHP (£)</option>
+      <option value="FKP">FKP (£)</option>
+      <option value="GIP">GIP (£)</option>
+      <option value="IMP">IMP (£)</option>
+      <option value="JEP">JEP (£)</option>
+      <option value="KID">KID ($)</option>
+      <option value="LRD">LRD (L$)</option>
+      <option value="MVR">MVR (Rf)</option>
+      <option value="MUR">MUR (₨)</option>
+      <option value="NAD">NAD (N$)</option>
+      <option value="PGK">PGK (K)</option>
+      <option value="SBD">SBD (SI$)</option>
+      <option value="SLL">SLL (Le)</option>
+      <option value="SOS">SOS (Sh)</option>
+      <option value="SSP">SSP (£)</option>
+      <option value="STN">STN (Db)</option>
+      <option value="TOP">TOP (T$)</option>
+      <option value="VUV">VUV (Vt)</option>
+      <option value="WST">WST (WS$)</option>
+      <option value="ZMW">ZMW (ZK)</option>
+      <option value="ZWL">ZWL (Z$)</option>
+    </select>
+    <button onclick="convertCurrency()">Convert</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    // Free API key from ExchangeRate-API
+    const API_KEY = '74f211f3dcd20d75515c44c8';
+    const BASE_URL = `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/`;
+
+    async function convertCurrency() {
+      const amount = document.getElementById('amount').value;
+      const fromCurrency = document.getElementById('from-currency').value;
+      const toCurrency = document.getElementById('to-currency').value;
+
+      if (!amount) {
+        alert('Please enter an amount.');
+        return;
+      }
+
+      try {
+        // Fetch latest exchange rates
+        const response = await fetch(`${BASE_URL}${fromCurrency}`);
+        const data = await response.json();
+
+        if (data.result === 'error') {
+          throw new Error(data['error-type']);
+        }
+
+        const rates = data.conversion_rates;
+
+        // Check if the target currency is available
+        if (!rates[toCurrency]) {
+          throw new Error('Invalid target currency.');
+        }
+
+        // Convert the amount
+        const rate = rates[toCurrency];
+        const result = (amount * rate).toFixed(2);
+
+        // Display the result
+        document.getElementById('result').innerText = `${amount} ${fromCurrency} = ${result} ${toCurrency}`;
+      } catch (error) {
+        console.error('Error converting currency:', error);
+        alert('Error converting currency. Please try again.');
+      }
+    }
+  </script>
+</body>
+</html>

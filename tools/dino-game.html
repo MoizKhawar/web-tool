@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dino Run Clone</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: black; color: white; }
+        .game-container { position: relative; width: 100%; max-width: 600px; height: 200px; border: 2px solid white; margin: auto; overflow: hidden; background-color: gray; }
+        .dino { width: 40px; height: 40px; background: green; position: absolute; bottom: 0; left: 50px; }
+        .obstacle { width: 20px; height: 40px; background: red; position: absolute; bottom: 0; right: 0; }
+        .score { font-size: 20px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Dino Run Clone</h1>
+    <p>Press space or tap to jump!</p>
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="game-container" id="game-container">
+        <div class="dino" id="dino"></div>
+        <div class="obstacle" id="obstacle"></div>
+    </div>
+    <script>
+        const dino = document.getElementById("dino");
+        const obstacle = document.getElementById("obstacle");
+        const scoreDisplay = document.getElementById("score");
+        let isJumping = false;
+        let score = 0;
+        
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "Space" && !isJumping) {
+                jump();
+            }
+        });
+        
+        document.getElementById("game-container").addEventListener("touchstart", function() {
+            if (!isJumping) {
+                jump();
+            }
+        });
+        
+        function jump() {
+            let position = 0;
+            isJumping = true;
+            let upInterval = setInterval(() => {
+                if (position >= 100) {
+                    clearInterval(upInterval);
+                    let downInterval = setInterval(() => {
+                        if (position <= 0) {
+                            clearInterval(downInterval);
+                            isJumping = false;
+                        }
+                        position -= 5;
+                        dino.style.bottom = position + "px";
+                    }, 20);
+                }
+                position += 5;
+                dino.style.bottom = position + "px";
+            }, 20);
+        }
+        
+        function moveObstacle() {
+            let position = 600;
+            let interval = setInterval(() => {
+                if (position <= -20) {
+                    position = 600;
+                    score++;
+                    scoreDisplay.textContent = score;
+                }
+                position -= 5;
+                obstacle.style.left = position + "px";
+                
+                let dinoBottom = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
+                let dinoLeft = 50;
+                let dinoRight = dinoLeft + 40;
+                let obstacleLeft = position;
+                let obstacleRight = position + 20;
+                
+                if (obstacleLeft < dinoRight && obstacleRight > dinoLeft && dinoBottom <= 40) {
+                    alert("Game Over! Your score: " + score);
+                    clearInterval(interval);
+                    location.reload();
+                }
+            }, 20);
+        }
+        
+        moveObstacle();
+    </script>
+</body>
+</html>

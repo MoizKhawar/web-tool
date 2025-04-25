@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .timer-container {
+            text-align: center;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .timer {
+            font-size: 3rem;
+            color: #ff4c4c;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #555555;
+            cursor: not-allowed;
+        }
+
+        .time-input {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #2a2a2a, #1e1e1e);
+            border-radius: 10px;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .time-input::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://cdn-icons-png.flaticon.com/512/1828/1828884.png') no-repeat center;
+            background-size: 50px 50px;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .time-input label {
+            font-size: 1rem;
+            color: #ffcc00;
+            margin-right: 5px;
+            z-index: 1;
+            position: relative;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            z-index: 1;
+            position: relative;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #ffcc00;
+            box-shadow: 0 0 5px #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <div class="time-input">
+            <label for="hours">Hours:</label>
+            <input type="number" id="hours" min="0" value="0">
+            <label for="minutes">Minutes:</label>
+            <input type="number" id="minutes" min="0" value="0">
+            <label for="seconds">Seconds:</label>
+            <input type="number" id="seconds" min="0" value="0">
+        </div>
+        <div class="timer" id="timer">00:00:00</div>
+        <div class="buttons">
+            <button id="startBtn">Start</button>
+            <button id="stopBtn" disabled>Stop</button>
+            <button id="resetBtn" disabled>Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let countdown;
+        let timeLeft = 0;
+
+        const timerDisplay = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const hoursInput = document.getElementById('hours');
+        const minutesInput = document.getElementById('minutes');
+        const secondsInput = document.getElementById('seconds');
+
+        function updateTimerDisplay() {
+            const hours = String(Math.floor(timeLeft / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((timeLeft % 3600) / 60)).padStart(2, '0');
+            const seconds = String(timeLeft % 60).padStart(2, '0');
+            timerDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function startTimer() {
+            if (timeLeft <= 0) {
+                const hours = parseInt(hoursInput.value) || 0;
+                const minutes = parseInt(minutesInput.value) || 0;
+                const seconds = parseInt(secondsInput.value) || 0;
+                timeLeft = hours * 3600 + minutes * 60 + seconds;
+
+                if (timeLeft <= 0) {
+                    alert('Please enter a valid time.');
+                    return;
+                }
+            }
+
+            countdown = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    alert('Time is up!');
+                }
+            }, 1000);
+
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            resetBtn.disabled = false;
+        }
+
+        function stopTimer() {
+            clearInterval(countdown);
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+        }
+
+        function resetTimer() {
+            clearInterval(countdown);
+            timeLeft = 0;
+            updateTimerDisplay();
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            resetBtn.disabled = true;
+        }
+
+        startBtn.addEventListener('click', startTimer);
+        stopBtn.addEventListener('click', stopTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        updateTimerDisplay();
+    </script>
+</body>
+</html>

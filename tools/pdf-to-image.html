@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF to Image Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #262626;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-top: 10px;
+      color: #e74c3c;
+      font-weight: bold;
+      text-align: left;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #333333;
+      color: #f1c40f;
+      text-align: center;
+    }
+    button {
+      background: #e74c3c;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+    .preview {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .preview img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #f1c40f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>PDF to Image Converter</h1>
+    <label for="pdfFile">Upload PDF:</label>
+    <input type="file" id="pdfFile" accept="application/pdf">
+    <label for="imageFormat">Select Image Format:</label>
+    <select id="imageFormat">
+      <option value="png">PNG</option>
+      <option value="jpg">JPG</option>
+    </select>
+    <button onclick="convertPDFtoImages()">Convert to Images</button>
+    <div class="preview" id="preview"></div>
+    <button id="downloadAllBtn" style="display: none; background: #2ecc71; color: #ffffff; font-weight: bold; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 15px;" onclick="downloadAllImages()">Download All</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+    
+    async function convertPDFtoImages() {
+      const fileInput = document.getElementById('pdfFile');
+      if (!fileInput.files.length) {
+        alert('Please upload a PDF file first.');
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      const fileReader = new FileReader();
+      fileReader.readAsArrayBuffer(file);
+      fileReader.onload = async function() {
+        const pdfData = new Uint8Array(fileReader.result);
+        const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+        const previewDiv = document.getElementById('preview');
+        previewDiv.innerHTML = '';
+        document.getElementById('downloadAllBtn').style.display = 'block';
+        
+        for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+          const page = await pdf.getPage(pageNum);
+          const scale = 2;
+          const viewport = page.getViewport({ scale });
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          
+          const renderContext = { canvasContext: ctx, viewport };
+          await page.render(renderContext).promise;
+          
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL(`image/${document.getElementById('imageFormat').value}`);
+          const wrapper = document.createElement('div');
+          wrapper.style.display = 'flex';
+          wrapper.style.flexDirection = 'column';
+          wrapper.style.alignItems = 'center';
+          wrapper.appendChild(img);
+          
+          const downloadBtn = document.createElement('button');
+          downloadBtn.innerText = '⬇';
+          downloadBtn.style.background = '#2ecc71';
+          downloadBtn.style.color = '#fff';
+          downloadBtn.style.border = 'none';
+          downloadBtn.style.padding = '5px 10px';
+          downloadBtn.style.marginTop = '5px';
+          downloadBtn.style.borderRadius = '5px';
+          downloadBtn.style.cursor = 'pointer';
+          downloadBtn.onclick = () => {
+            const a = document.createElement('a');
+            a.href = img.src;
+            a.download = `page-${pageNum}.${document.getElementById('imageFormat').value}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          };
+          
+          wrapper.appendChild(downloadBtn);
+          previewDiv.appendChild(wrapper);
+        }
+      };
+    }
+    
+    function downloadAllImages() {
+      const downloadButtons = document.querySelectorAll('.preview button');
+      if (downloadButtons.length === 0) {
+        alert('No images to download!');
+        return;
+      }
+      downloadButtons.forEach(button => button.click());
+    }
+  </script>
+</body>
+</html>

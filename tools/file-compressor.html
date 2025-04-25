@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Compressor</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #262626;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      background: #333333;
+      color: #f1c40f;
+    }
+    button {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+    .result {
+      margin-top: 20px;
+      color: #f1c40f;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>File Compressor</h1>
+    <input type="file" id="fileInput" multiple>
+    <button onclick="compressFiles()">Compress</button>
+    <a id="downloadLink" style="display: none; margin-top: 10px; text-decoration: none;" download="compressed.zip">
+      <button style="background: #2ecc71; color: #fff; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 8px; cursor: pointer; transition: background 0.3s ease;">
+        Download Compressed File
+      </button>
+    </a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script>
+    async function compressFiles() {
+      const files = document.getElementById('fileInput').files;
+      if (files.length === 0) {
+        alert('Please select files to compress.');
+        return;
+      }
+      
+      const zip = new JSZip();
+      for (let file of files) {
+        zip.file(file.name, file);
+      }
+      
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const link = document.getElementById('downloadLink');
+      link.href = URL.createObjectURL(blob);
+      link.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

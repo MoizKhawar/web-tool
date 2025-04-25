@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #262626;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-top: 10px;
+      color: #e74c3c;
+      font-weight: bold;
+      text-align: left;
+    }
+    select, input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #333333;
+      color: #f1c40f;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+    select:hover, input:hover {
+      border-color: #f1c40f;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #2ecc71;
+      font-weight: bold;
+      padding: 15px;
+      border-radius: 8px;
+      background: #333;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.4);
+      border: 2px solid #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Unit Converter</h1>
+    <label for="category">Select Category:</label>
+    <select id="category" onchange="populateUnits()">
+      <option value="length">Length</option>
+      <option value="weight">Weight</option>
+      <option value="temperature">Temperature</option>
+      <option value="speed">Speed</option>
+    </select>
+    <label for="inputValue">Enter Value:</label>
+    <input type="number" id="inputValue" placeholder="Enter value" oninput="convert()">
+    <label for='fromUnit'>From:</label> <select id='fromUnit'></select>
+    <label for='toUnit'>To:</label> <select id='toUnit'></select>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const units = {
+      length: { meter: 1, kilometer: 0.001, mile: 0.000621371, yard: 1.09361, foot: 3.28084 },
+      weight: { gram: 1, kilogram: 0.001, pound: 0.00220462, ounce: 0.035274 },
+      temperature: {},
+      speed: { "meter/sec": 1, "km/hour": 3.6, "mile/hour": 2.23694 }
+    };
+    
+    function populateUnits() {
+      const category = document.getElementById('category').value;
+      const fromUnit = document.getElementById('fromUnit');
+      const toUnit = document.getElementById('toUnit');
+      
+      fromUnit.innerHTML = toUnit.innerHTML = "";
+      
+      if (category === "temperature") {
+        fromUnit.innerHTML = toUnit.innerHTML = `<option value="C">Celsius</option>
+                                                  <option value="F">Fahrenheit</option>
+                                                  <option value="K">Kelvin</option>`;
+      } else {
+        Object.keys(units[category]).forEach(unit => {
+          fromUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+          toUnit.innerHTML += `<option value="${unit}">${unit}</option>`;
+        });
+      }
+      convert();
+    }
+
+    function convert() {
+      const category = document.getElementById('category').value;
+      const inputValue = parseFloat(document.getElementById('inputValue').value);
+      const fromUnit = document.getElementById('fromUnit').value;
+      const toUnit = document.getElementById('toUnit').value;
+      
+      if (isNaN(inputValue)) {
+        document.getElementById('result').innerText = "";
+        return;
+      }
+      
+      let result;
+      if (category === "temperature") {
+        if (fromUnit === toUnit) result = inputValue;
+        else if (fromUnit === "C" && toUnit === "F") result = (inputValue * 9/5) + 32;
+        else if (fromUnit === "C" && toUnit === "K") result = inputValue + 273.15;
+        else if (fromUnit === "F" && toUnit === "C") result = (inputValue - 32) * 5/9;
+        else if (fromUnit === "F" && toUnit === "K") result = (inputValue - 32) * 5/9 + 273.15;
+        else if (fromUnit === "K" && toUnit === "C") result = inputValue - 273.15;
+        else if (fromUnit === "K" && toUnit === "F") result = (inputValue - 273.15) * 9/5 + 32;
+      } else {
+        result = inputValue * (units[category][toUnit] / units[category][fromUnit]);
+      }
+      
+      document.getElementById('result').innerText = `Converted Value: ${result.toFixed(4)} ${toUnit}`;
+    }
+    
+    populateUnits();
+  </script>
+</body>
+</html>

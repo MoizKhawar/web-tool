@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image to PDF Converter</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #1a1a1a;
+      color: #f1c40f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #262626;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      max-width: 450px;
+      width: 100%;
+    }
+    h1 {
+      color: #f1c40f;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+    label {
+      display: block;
+      font-size: 1rem;
+      margin-top: 10px;
+      color: #e74c3c;
+      font-weight: bold;
+      text-align: left;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #333333;
+      color: #f1c40f;
+      text-align: center;
+    }
+    button {
+      background: #e74c3c;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+    .preview {
+      margin-top: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .preview img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #f1c40f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Image to PDF Converter</h1>
+    <label for="images">Upload Images:</label>
+    <input type="file" id="images" multiple accept="image/*" onchange="previewImages()">
+    <label for="pageSize">Select Page Size:</label>
+    <select id="pageSize">
+      <option value="a4">A4</option>
+      <option value="letter">Letter</option>
+      <option value="legal">Legal</option>
+    </select>
+    <label for="quality">Select Quality:</label>
+    <select id="quality">
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+    
+    <button onclick="convertToPDF()">Convert to PDF</button>
+    <div class="preview" id="preview"></div>
+    <button id="downloadBtn" style="display: none; background: #2ecc71; color: #ffffff; font-weight: bold;" onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script>
+    function previewImages() {
+      const preview = document.getElementById('preview');
+      preview.innerHTML = "";
+      const files = document.getElementById('images').files;
+      
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function convertToPDF() {
+      const files = document.getElementById('images').files;
+      if (files.length === 0) {
+        alert("Please upload at least one image.");
+        return;
+      }
+      
+      const pdfDoc = await PDFLib.PDFDocument.create();
+      for (const file of files) {
+        const fileData = await file.arrayBuffer();
+        let img;
+        
+        if (file.type === "image/png") {
+          img = await pdfDoc.embedPng(fileData);
+        } else {
+          img = await pdfDoc.embedJpg(fileData);
+        }
+        
+        const page = pdfDoc.addPage([595, 842]); // Default A4 size
+        const { width, height } = img.scale(0.5);
+        page.drawImage(img, { x: 50, y: (842 - height) / 2, width, height });
+      }
+      
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const pdfURL = URL.createObjectURL(blob);
+      document.getElementById('downloadBtn').style.display = 'block';
+      document.getElementById('downloadBtn').dataset.url = pdfURL;
+      
+    }
+    function downloadPDF() {
+      const downloadBtn = document.getElementById('downloadBtn');
+      const pdfName = 'converted';
+      const link = document.createElement('a');
+      link.href = downloadBtn.dataset.url;
+      link.download = pdfName + '.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
