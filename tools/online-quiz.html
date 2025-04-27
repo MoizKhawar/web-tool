@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Quiz</title>
+    <script>
+        const quizzes = {
+            math: [
+                { question: "What is 2 + 2?", options: ["3", "4", "5"], answer: "4" },
+                { question: "What is 5 x 6?", options: ["30", "25", "35"], answer: "30" },
+                { question: "What is 10 - 7?", options: ["2", "3", "4"], answer: "3" },
+                { question: "What is 12 ÷ 4?", options: ["2", "3", "4"], answer: "3" },
+                { question: "What is the square root of 16?", options: ["3", "4", "5"], answer: "4" },
+                { question: "What is 7 x 8?", options: ["54", "56", "58"], answer: "56" },
+                { question: "What is 15 + 10?", options: ["20", "25", "30"], answer: "25" },
+                { question: "What is 100 ÷ 10?", options: ["5", "10", "15"], answer: "10" },
+                { question: "What is 9 x 9?", options: ["81", "72", "64"], answer: "81" },
+                { question: "What is 50 - 25?", options: ["20", "25", "30"], answer: "25" },
+                { question: "What is 3 + 5?", options: ["7", "8", "9"], answer: "8" },
+                { question: "What is 6 x 7?", options: ["42", "48", "36"], answer: "42" },
+                { question: "What is 20 ÷ 5?", options: ["4", "5", "6"], answer: "4" },
+                { question: "What is 8 x 8?", options: ["64", "72", "56"], answer: "64" },
+                { question: "What is 14 + 6?", options: ["18", "20", "22"], answer: "20" },
+                { question: "What is 25 ÷ 5?", options: ["4", "5", "6"], answer: "5" },
+                { question: "What is 11 x 11?", options: ["121", "111", "101"], answer: "121" },
+                { question: "What is 30 - 15?", options: ["10", "15", "20"], answer: "15" },
+                { question: "What is 7 + 8?", options: ["14", "15", "16"], answer: "15" },
+                { question: "What is 9 x 5?", options: ["45", "40", "50"], answer: "45" }
+            ],
+            science: [
+                { question: "What planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter"], answer: "Mars" },
+                { question: "What is the chemical symbol for water?", options: ["H2O", "O2", "CO2"], answer: "H2O" },
+                { question: "What gas do plants absorb from the atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen"], answer: "Carbon Dioxide" },
+                { question: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome"], answer: "Mitochondria" },
+                { question: "What is the boiling point of water?", options: ["90°C", "100°C", "110°C"], answer: "100°C" },
+                { question: "What is the chemical symbol for gold?", options: ["Au", "Ag", "Fe"], answer: "Au" },
+                { question: "What planet is closest to the Sun?", options: ["Venus", "Mercury", "Earth"], answer: "Mercury" },
+                { question: "What is the largest organ in the human body?", options: ["Heart", "Skin", "Liver"], answer: "Skin" },
+                { question: "What is the process by which plants make their food?", options: ["Respiration", "Photosynthesis", "Digestion"], answer: "Photosynthesis" },
+                { question: "What is the chemical formula for salt?", options: ["NaCl", "KCl", "CaCl"], answer: "NaCl" },
+                { question: "What is the hardest natural substance on Earth?", options: ["Gold", "Diamond", "Iron"], answer: "Diamond" },
+                { question: "What is the speed of light?", options: ["300,000 km/s", "150,000 km/s", "450,000 km/s"], answer: "300,000 km/s" },
+                { question: "What is the main gas found in the air we breathe?", options: ["Oxygen", "Nitrogen", "Carbon Dioxide"], answer: "Nitrogen" },
+                { question: "What is the chemical symbol for oxygen?", options: ["O", "O2", "Ox"], answer: "O" },
+                { question: "What is the smallest unit of life?", options: ["Atom", "Cell", "Molecule"], answer: "Cell" },
+                { question: "What is the study of plants called?", options: ["Zoology", "Botany", "Ecology"], answer: "Botany" },
+                { question: "What is the chemical symbol for iron?", options: ["Ir", "Fe", "In"], answer: "Fe" },
+                { question: "What is the largest planet in our solar system?", options: ["Earth", "Jupiter", "Saturn"], answer: "Jupiter" },
+                { question: "What is the process of water turning into vapor called?", options: ["Condensation", "Evaporation", "Precipitation"], answer: "Evaporation" },
+                { question: "What is the study of the universe called?", options: ["Geology", "Astronomy", "Biology"], answer: "Astronomy" }
+            ]
+            // Add 20 quizzes for other categories similarly...
+        };
+
+        let currentQuiz = [];
+        let currentQuestionIndex = 0;
+
+        function loadQuiz() {
+            const category = document.getElementById("category").value;
+            if (category && quizzes[category]) {
+                currentQuiz = quizzes[category];
+                currentQuestionIndex = 0;
+                document.getElementById("quiz").style.display = "block";
+                showQuestion();
+            } else {
+                document.getElementById("quiz").style.display = "none";
+            }
+        }
+
+        function showQuestion() {
+            const questionData = currentQuiz[currentQuestionIndex];
+            document.getElementById("question").innerText = questionData.question;
+            const optionsContainer = document.getElementById("options");
+            optionsContainer.innerHTML = "";
+            questionData.options.forEach(option => {
+                const li = document.createElement("li");
+                li.innerHTML = `<label><input type="radio" name="option" value="${option}"> ${option}</label>`;
+                optionsContainer.appendChild(li);
+            });
+            document.getElementById("result").innerText = "";
+        }
+
+        function submitAnswer() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) {
+                alert("Please select an answer!");
+                return;
+            }
+
+            const answer = selectedOption.value;
+            const correctAnswer = currentQuiz[currentQuestionIndex].answer;
+
+            if (answer === correctAnswer) {
+                document.getElementById("result").innerText = "Correct!";
+            } else {
+                document.getElementById("result").innerText = `Wrong! The correct answer is ${correctAnswer}.`;
+            }
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < currentQuiz.length) {
+                setTimeout(showQuestion, 2000);
+            } else {
+                setTimeout(() => {
+                    alert("Quiz completed!");
+                    document.getElementById("quiz").style.display = "none";
+                }, 2000);
+            }
+        }
+    </script>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Routine Builder</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+        #routine-builder {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .routine-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .routine-item input[type="text"],
+        .routine-item input[type="time"] {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+        .routine-item button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #00bcd4;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .routine-item button:hover {
+            background-color: #008c9e;
+            transform: scale(1.05);
+        }
+        #routine-list {
+            margin-top: 20px;
+            list-style: none;
+            padding: 0;
+        }
+        #routine-list li {
+            background-color: #2a2a2a;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        #routine-list li button {
+            padding: 5px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f44336;
+            color: #ffffff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        #routine-list li button:hover {
+            background-color: #d32f2f;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Routine Builder</h1>
+    <div id="routine-builder">
+        <div class="routine-item">
+            <input type="text" id="task-input" placeholder="Enter a task" style="flex: 2;">
+            <input type="time" id="time-input">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <ul id="routine-list"></ul>
+    </div>
+
+    <script>
+        function addTask() {
+            const taskInput = document.getElementById('task-input');
+            const timeInput = document.getElementById('time-input');
+            const taskValue = taskInput.value.trim();
+            const timeValue = timeInput.value;
+
+            if (taskValue && timeValue) {
+                const taskList = document.getElementById('routine-list');
+                const listItem = document.createElement('li');
+                listItem.textContent = `${timeValue} - ${taskValue}`;
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = function() {
+                    taskList.removeChild(listItem);
+                };
+
+                listItem.appendChild(deleteButton);
+                taskList.appendChild(listItem);
+
+                taskInput.value = '';
+                timeInput.value = '';
+            }
+        }
+    </script>
+</body>
+</html>

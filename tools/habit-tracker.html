@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        header {
+            background-color: #1f1f1f;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #e53935;
+        }
+        header h1 {
+            color: #e53935;
+            margin: 0;
+        }
+        .container {
+            padding: 20px;
+        }
+        .habit-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .habit-form input, .habit-form button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .habit-form input {
+            flex: 1;
+            background-color: #1f1f1f;
+            color: #e0e0e0;
+        }
+        .habit-form button {
+            background-color: #e53935;
+            color: #fff;
+            cursor: pointer;
+        }
+        .habit-form button:hover {
+            background-color: #d32f2f;
+        }
+        .habit-list {
+            list-style: none;
+            padding: 0;
+        }
+        .habit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1f1f1f;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .habit-item span {
+            flex: 1;
+        }
+        .habit-item button {
+            background-color: #e53935;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .habit-item button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Habit Tracker</h1>
+    </header>
+    <div class="container">
+        <form class="habit-form" id="habitForm">
+            <input type="text" id="habitInput" placeholder="Enter a new habit" required>
+            <button type="submit">Add Habit</button>
+        </form>
+        <ul class="habit-list" id="habitList"></ul>
+    </div>
+    <script>
+        const habitForm = document.getElementById('habitForm');
+        const habitInput = document.getElementById('habitInput');
+        const habitList = document.getElementById('habitList');
+
+        habitForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const habitText = habitInput.value.trim();
+            if (habitText) {
+                const habitItem = document.createElement('li');
+                habitItem.className = 'habit-item';
+                habitItem.innerHTML = `
+                    <span>${habitText}</span>
+                    <button onclick="removeHabit(this)">Remove</button>
+                `;
+                habitList.appendChild(habitItem);
+                habitInput.value = '';
+            }
+        });
+
+        function removeHabit(button) {
+            const habitItem = button.parentElement;
+            habitList.removeChild(habitItem);
+        }
+    </script>
+</body>
+</html></form>
