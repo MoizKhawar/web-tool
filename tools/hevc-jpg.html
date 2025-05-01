@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to MP4 Converter</title>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.1/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+    <h1>Video to MP4 Converter</h1>
+    <input type="file" id="videoInput" accept="video/*">
+    <button id="convertButton">Convert to MP4</button>
+    <p id="status"></p>
+    <a id="downloadLink" style="display: none;">Download MP4</a>
+
+    <script>
+        const convertButton = document.getElementById('convertButton');
+        const videoInput = document.getElementById('videoInput');
+        const status = document.getElementById('status');
+        const downloadLink = document.getElementById('downloadLink');
+
+        convertButton.addEventListener('click', async () => {
+            if (!videoInput.files.length) {
+                alert('Please select a video file first.');
+                return;
+            }
+
+            const file = videoInput.files[0];
+            const fileName = file.name.split('.').slice(0, -1).join('.') + '.mp4';
+
+            status.textContent = 'Loading FFmpeg...';
+            const { createFFmpeg, fetchFile } = FFmpeg;
+            const ffmpeg = createFFmpeg({ log: true });
+
+            await ffmpeg.load();
+            status.textContent = 'Converting...';
+
+            ffmpeg.FS('writeFile', file.name, await fetchFile(file));
+            await ffmpeg.run('-i', file.name, fileName);
+
+            const data = ffmpeg.FS('readFile', fileName);
+            const mp4Blob = new Blob([data.buffer], { type: 'video/mp4' });
+            const url = URL.createObjectURL(mp4Blob);
+
+            downloadLink.href = url;
+            downloadLink.download = fileName;
+            downloadLink.style.display = 'block';
+            downloadLink.textContent = 'Download MP4';
+            status.textContent = 'Conversion complete!';
+        });
+    </script>
+</body>
+</html>

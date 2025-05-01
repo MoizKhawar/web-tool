@@ -7,28 +7,58 @@
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background: #1a1a1a; /* Black background */
-      color: #f1c40f; /* Yellow text */
+      background: #1a1a1a;
+      color: #f1c40f;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #333;
+      overflow: hidden;
+      padding: 10px 20px;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      min-height: 100vh;
+    }
+
+    .navbar a {
+      color: #f1c40f;
+      padding: 12px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .navbar a:hover {
+      background-color: #575757;
+      border-radius: 5px;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-container input[type="text"] {
+      padding: 6px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
     }
 
     .container {
-      background: #262626; /* Dark grey container */
+      background: #262626;
       padding: 20px;
       border-radius: 15px;
-</li>      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       text-align: center;
       max-width: 1200px;
       width: 100%;
+      margin: 20px auto;
     }
 
     h1 {
-      color: #f1c40f; /* Yellow heading */
+      color: #f1c40f;
       margin-bottom: 20px;
       font-size: 2.5rem;
       text-align: center;
@@ -42,8 +72,8 @@
     }
 
     .tool-card {
-      background: #333333; /* Dark grey card */
-      border: 1px solid #444; /* Grey border */
+      background: #333333;
+      border: 1px solid #444;
       border-radius: 10px;
       padding: 20px;
       text-align: center;
@@ -57,25 +87,25 @@
 
     .tool-number {
       font-size: 1.5rem;
-      color: #e74c3c; /* Red number */
+      color: #e74c3c;
       margin-bottom: 10px;
     }
 
     .tool-name {
       font-size: 1.2rem;
-      color: #f1c40f; /* Yellow text */
+      color: #f1c40f;
       margin-bottom: 10px;
     }
 
     .tool-description {
       font-size: 1rem;
-      color: #7f8c8d; /* Grey text */
+      color: #7f8c8d;
       margin-bottom: 15px;
     }
 
     .tool-link {
       display: inline-block;
-      background: #e74c3c; /* Red button */
+      background: #e74c3c;
       color: #fff;
       padding: 10px 20px;
       border-radius: 8px;
@@ -84,22 +114,35 @@
     }
 
     .tool-link:hover {
-      background: #c0392b; /* Darker red on hover */
+      background: #c0392b;
     }
 
     .section-heading {
       font-size: 2rem;
-      color: #2ecc71; /* Green heading */
+      color: #2ecc71;
       margin-top: 40px;
       margin-bottom: 20px;
       text-align: left;
-      border-bottom: 2px solid #444; /* Grey line */
+      border-bottom: 2px solid #444;
       padding-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="navbar">
+    <div>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="search-container">
+      <label for="search"></label>
+      <input type="text" id="search" name="search" placeholder="Search tools..." onkeyup="filterTools()">
+    </div>
+  </div>
+
+  
+<div class="container">
     <h1>Multi-Tool App</h1>
 
     <!-- Productivity Tools -->
@@ -225,9 +268,9 @@
       </div>
       <div class="tool-card">
         <div class="tool-number">19</div>
-        <div class="tool-name">Routine Builder</div>
-        <div class="tool-description">Build daily routine to do whole day accordingly.</div>
-        <a href="tools/routine-builder.html" class="tool-link">Open Tool</a>
+        <div class="tool-name">Weather App</div>
+        <div class="tool-description">Check current weather and forecasts.</div>
+        <a href="tools/weather-app.html" class="tool-link">Open Tool</a>
       </div>
       <div class="tool-card">
         <div class="tool-number">20</div>
@@ -343,5 +386,22 @@
       </div>
     </div>
   </div>
+<script>
+  function filterTools() {
+    const searchInput = document.getElementById('search').value.toLowerCase();
+    const toolCards = document.querySelectorAll('.tool-card');
+
+    toolCards.forEach(card => {
+      const toolName = card.querySelector('.tool-name').textContent.toLowerCase();
+      const toolDescription = card.querySelector('.tool-description').textContent.toLowerCase();
+
+      if (toolName.includes(searchInput) || toolDescription.includes(searchInput)) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
 </body>
 </html>
